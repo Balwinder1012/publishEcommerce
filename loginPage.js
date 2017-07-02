@@ -24,7 +24,7 @@ function getAdminList(){
 function updateLocalStorage(){
 	
 	localStorage.AdminList = JSON.stringify(AdminList);
-	
+	localStorage.UserList = JSON.stringify(UserList);
 	
 }
 
@@ -53,32 +53,36 @@ login.addEventListener("click",function(event){
 
 	adminIndex=isAdmin(email.value,passWord.value);
 	userIndex=isUser(email.value,passWord.value);
+	
 	if(adminIndex>=0){
 			if(AdminList[adminIndex].active=="yes"){
+				firstLogoutAllAccounts();
 				AdminList[adminIndex].flag = "online";
+				
 				updateLocalStorage();
 				sessionStorage.currentUser=AdminList[adminIndex].name;
 				alert("Logined Successfully - Welcome "+AdminList[adminIndex].name);
 				
-				window.location = "AdminPanel.html";
+				window.location = "AdminPanel/AdminPanel.html";
 
 			}
 			else{
 				alert("Account is not active now");
-				window.location = "LoginPage";
+				window.location = "LoginPage.html";
 			}
 							
 	}
 	
 	else if(userIndex>=0){
-		
+			
 			if(UserList[userIndex].active=="yes"){
+				firstLogoutAllAccounts();
 				UserList[userIndex].flag = "online";
 				updateLocalStorage();
 				sessionStorage.currentUser=UserList[userIndex].name;
 				alert("Logined Successfully - Welcome "+UserList[userIndex].name);
 				
-				window.location = "UserPanel.html";
+				window.location = "UserPanel/UserPanel.html";
 
 			}
 			else{
@@ -119,6 +123,19 @@ function isUser(email,pwd){
 			return i;
 	
 	return -1;
+	
+	
+}
+function firstLogoutAllAccounts(){
+	
+	for(x in AdminList)
+		if(AdminList[x].flag=="online")
+			AdminList[x].flag="offline";
+		
+	for(x in UserList)
+		if(UserList[x].flag=="online")
+			UserList[x].flag="offline";
+	
 	
 	
 }

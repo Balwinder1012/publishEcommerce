@@ -12,7 +12,7 @@ AdminList = getAdminList();
 if(getAdminId()==-1){
 	
 	alert('Please Login First');
-	window.location = "LoginPage.html";
+	window.location = "../LoginPage.html";
 	
 	
 }
@@ -24,7 +24,7 @@ if(currentUser==undefined){
 		AdminList[index].flag="offline";
 	}
 	updateLocalStorage();
-	window.location = "LoginPage.html"
+	window.location = "../LoginPage.html"
 	
 }
 
@@ -46,7 +46,7 @@ function getAdminId(){
 	
 }
 rightMostPanel.innerHTML="Welcome " +currentUser;
-insertBreak(rightMostPanel);
+insertBreak(2,rightMostPanel);
 var logOut = document.createElement('input');
 
 logOut.type="button";
@@ -73,7 +73,7 @@ function setAdminAccountInactive(){
 		
 		updateLocalStorage();
 	
-		window.location = "LoginPage.html";
+		window.location = "../LoginPage.html";
 	
 }
 
@@ -85,7 +85,7 @@ function updateLocalStorage(){
 }
 
 manageProducts.addEventListener("click",function(event){
-	window.Location = "~/ManageProducts.html";
+	window.location = "ManageProducts.html";
 	
 	
 	

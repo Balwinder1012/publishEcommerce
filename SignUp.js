@@ -22,7 +22,7 @@ UserList = getUserList();
 
 if(UserList.length){
 	
-	userid = UserList[UserList.length-1].userid + 1;
+	userid = parseInt(UserList[UserList.length-1].id) + 1;
 	
 	
 }

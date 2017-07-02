@@ -34,22 +34,52 @@
 	
 }
 
-	if(currentUser==undefined){
-	var index = getAdminId();
-	if(index!=-1){
+	if(currentUser==undefined || getAdminId()==-1){
+		var index = getAdminId();
+		if(index!=-1){
 		AdminList[index].flag="offline";
-	}
-	updateAdminList();
+		}
+		updateAdminList();
 	
-	alert("Please login first");
-	hideTheElement(b);
-	window.location = "interfaceForLogin/LoginPage.html"
+		alert("Please login first");
+		hideTheElement(b);
+		window.location = "../LoginPage.html"
 	
 	}
 
 	
 	
-	rightMostPanel.innerHTML="Welcome " +currentUser;
+	rightMostPanel.innerHTML=currentUser;
+	insertBreak(rightMostPanel);
+	insertBreak(rightMostPanel);
+	var logOut = document.createElement('input');
+
+	logOut.type="button";
+	logOut.value="Log Out";
+	rightMostPanel.appendChild(logOut);
+	
+	logOut.addEventListener("click",function(event){
+		
+		//To delete the current session
+		sessionStorage.clear();
+		setAdminAccountInactive();
+		
+		
+	
+	
+	
+});
+
+function setAdminAccountInactive(){
+		
+		AdminList[getAdminId()].flag="offline";
+		
+		updateLocalManager();
+	
+		window.location = "../LoginPage.html";
+	
+}
+
     function getStoredProducts(){
         if(!localStorage.products){
             localStorage.products = JSON.stringify([]);
@@ -86,6 +116,11 @@
         localStorage.products = JSON.stringify(products);
         
     }
+	function insertBreak(node){
+	
+	node.appendChild(document.createElement('br'));
+	
+	}
 	
 	b.addEventListener("click", function(event){
                     	/*b is the id for button "Add products" which is required to be hidden
@@ -195,9 +230,10 @@ function addToArray(){
 		var productObj = new Object();
 		productObj.id = productID;
 		productObj.name = document.getElementById('pname').value;
-		productObj.price = document.getElementById('pprice').value;
+		productObj.price = parseInt(document.getElementById('pprice').value);
 		productObj.desc =  document.getElementById('pdesc').value;
-		productObj.quant = document.getElementById('pquant').value;
+		productObj.quant = parseInt(document.getElementById('pquant').value);
+		
 		productObj.addedBy = AdminList[getAdminId()].name;
 		productObj.date = new Date();
 		productObj.active = "yes";
@@ -290,7 +326,7 @@ function editTheArray(targetNode){
         document.getElementById('pquant').value=products[index].quant;
 	   
         products[index].active="no";
-	      
+	    updateLocalManager();  
         displayArray();
 	    
 }
@@ -299,7 +335,8 @@ function displayArray(){
     if(products.length==0)
         console.log("Product Array is empty");
     for(var i=0;i<products.length;i++)
-		console.log("name= "+products[i].name+" id= "+products[i].id);
+		if(products[i].active==="yes")
+			console.log("name= "+products[i].name+" id= "+products[i].id);
 }
 
 function SoftDeleteFromArray(targetNode){
@@ -308,6 +345,7 @@ function SoftDeleteFromArray(targetNode){
 	var indexToSoftDelete = findIndex(id);
 	
 	products[indexToSoftDelete].active="no";
+	updateLocalManager();
 }
 
 function findIndex(id){
@@ -320,3 +358,10 @@ function findIndex(id){
 		return -1;
 }
 
+function updateLocalManager(){
+	
+	localStorage.AdminList = JSON.stringify(AdminList);
+	localStorage.products = JSON.stringify(products);
+	
+	
+}
