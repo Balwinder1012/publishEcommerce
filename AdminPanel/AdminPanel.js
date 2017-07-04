@@ -4,6 +4,11 @@ var manageProducts = document.getElementById('manageProducts');
 var addAccounts = document.getElementById('addAccounts');
 var deleteAccounts = document.getElementById('deleteAccounts'); 
 var addForm = document.getElementById('addForm');
+var seeOrders = document.getElementById('seeOrders');
+
+var showMasterOrders = document.getElementById('showMasterOrders');
+var showDetailOrders = document.getElementById('showDetailOrders');
+
 var AdminList = [];
 var currentUser=sessionStorage.currentUser;
 
@@ -12,11 +17,93 @@ AdminList = getAdminList();
 if(getAdminId()==-1){
 	
 	alert('Please Login First');
-	window.location = "../LoginPage.html";
+	window.location = "../index.html";
 	
 	
 }
 
+
+////////////////////////////////////////////////////////////
+
+
+var UserList = [];
+function getUserList(){
+        if(!localStorage.UserList){
+            localStorage.UserList = JSON.stringify([]);
+        }
+        return JSON.parse(localStorage.UserList);
+}
+
+UserList = getUserList();
+///////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////For order data
+
+
+var masterOrders = [];
+var detailOrders = [];
+
+
+masterOrders = getMasterOrderData();
+
+
+	
+if(masterOrders.length)
+	idForMaster = masterOrders[masterOrders.length-1].id + 1;
+
+	
+	function getMasterOrderData(){
+        if(!localStorage.masterOrders){
+            localStorage.masterOrders = JSON.stringify([]);
+        }
+        return JSON.parse(localStorage.masterOrders);
+	}
+	
+
+
+
+
+function updateStorageForMasterOrders(){
+	
+	localStorage.masterOrders = JSON.stringify(masterOrders);
+	
+	
+	
+}
+
+detailOrders = getDetailOrderData();
+
+	
+function getDetailOrderData(){
+
+	if(!localStorage.detailOrders){
+            localStorage.detailOrders = JSON.stringify([]);
+	}
+    
+    return JSON.parse(localStorage.detailOrders);
+}
+
+
+function getOrderData(){
+	
+	if(!localStorage.detailOrders)
+		detailOrders = JSON.stringify([]);
+	
+	return JSON.parse(localStorage.detailOrders);
+	
+	
+}
+
+function updateStorageForDetailOrders(){
+	
+	localStorage.detailOrders = JSON.stringify(detailOrders);
+	
+	
+	
+}
+
+
+///////////////////////////////////////////////////////////////////////////
 // This if function is used to set the flag offline if currentUser is undefined and still flag is set true
 if(currentUser==undefined){
 	var index = getAdminId();
@@ -24,7 +111,7 @@ if(currentUser==undefined){
 		AdminList[index].flag="offline";
 	}
 	updateLocalStorage();
-	window.location = "../LoginPage.html"
+	window.location = "../index.html"
 	
 }
 
@@ -73,7 +160,7 @@ function setAdminAccountInactive(){
 		
 		updateLocalStorage();
 	
-		window.location = "../LoginPage.html";
+		window.location = "../index.html";
 	
 }
 
@@ -339,3 +426,154 @@ function getIndex(id){
 	}
 	return -1;
 }
+
+
+
+
+seeOrders.addEventListener("click",function(event){
+	
+	showMasterOrders.innerHTML="";
+	
+	var table = document.createElement('table');
+	table.setAttribute("border","1px");
+	showMasterOrders.appendChild(table);
+	
+	var r1 = document.createElement('tr');
+	var c1 = document.createElement('th');
+	c1.innerHTML = "UserId";
+	r1.appendChild(c1);
+	var c2 = document.createElement('th');
+	c2.innerHTML = "UserName";
+	r1.appendChild(c2);
+	var c3 = document.createElement('th');
+	c3.innerHTML = "Total Price";
+	r1.appendChild(c3);
+	var c4 = document.createElement('th');
+	c4.innerHTML = "Total Quantity";
+	r1.appendChild(c4);
+	var c5 = document.createElement('th');
+	c5.innerHTML = "Status";
+	r1.appendChild(c5);
+	
+	table.appendChild(r1);
+	
+	for(var i=0;i<masterOrders.length;i++){
+		
+			var r1 = document.createElement('tr');
+			var c1 = document.createElement('th');
+			c1.innerHTML = masterOrders[i].userId;
+			r1.appendChild(c1);
+			var c2 = document.createElement('th');
+			c2.innerHTML = getUserName(masterOrders[i].userId);
+			r1.appendChild(c2);
+			var c3 = document.createElement('th');
+			c3.innerHTML = masterOrders[i].totalPrice;
+			r1.appendChild(c3);
+			var c4 = document.createElement('th');
+			c4.innerHTML = masterOrders[i].totalQuantity;
+			r1.appendChild(c4);
+			var c5 = document.createElement('th');
+			c5.innerHTML = masterOrders[i].flag;
+			r1.appendChild(c5);
+			
+			
+			
+			var c6 = document.createElement('th');
+			var c61 = document.createElement('input');
+			c61.type="button";
+			c61.value="See Detail";
+			c61.setAttribute("id",i);
+			c6.appendChild(c61);
+			r1.appendChild(c6);
+	
+			c61.addEventListener("click",function(event){
+		
+				showTheDetailOrders(masterOrders[event.target.id].userId);
+		
+			});
+	
+	
+			table.appendChild(r1);
+		
+	}
+	
+	
+});
+function getUserName(id){
+	for(x in UserList)
+		if(UserList[x].id==id)
+			return UserList[x].name;
+		
+	return "";
+}
+function showTheDetailOrders(forUserID){
+	
+	showDetailOrders.innerHTML = "";
+	
+	var table = document.createElement('table');
+	table.setAttribute("border","1px");
+	showDetailOrders.appendChild(table);
+	
+	var r1 = document.createElement('tr');
+	
+	var c11 = document.createElement('th');
+	c11.innerHTML = "Product ID";
+	r1.appendChild(c11);
+	
+	var c1 = document.createElement('th');
+	c1.innerHTML = "Product Name";
+	r1.appendChild(c1);
+	
+	var c2 = document.createElement('th');
+	c2.innerHTML = "Price";
+	r1.appendChild(c2);
+	var c3 = document.createElement('th');
+	c3.innerHTML = "Quantity";
+	r1.appendChild(c3);
+	var c4 = document.createElement('th');
+	c4.innerHTML = "Total Amount";
+	r1.appendChild(c4);
+	var c5 = document.createElement('th');
+	c5.innerHTML = "Status";
+	r1.appendChild(c5);
+	
+	table.appendChild(r1);
+	
+	for(var i=0;i<detailOrders.length;i++){
+	
+		if(detailOrders[i].userId==forUserID){
+		var r2 = document.createElement('tr');
+		
+		var c211 = document.createElement('th');
+		c211.innerHTML = detailOrders[i].pid;
+		r2.appendChild(c211);
+		
+		
+		var c21 = document.createElement('th');
+		c21.innerHTML = detailOrders[i].pname;
+		r2.appendChild(c21);
+		var c22 = document.createElement('th');
+		c22.innerHTML =detailOrders[i].pprice;
+		r2.appendChild(c22);
+		var c23 = document.createElement('th');
+		c23.innerHTML = detailOrders[i].quant;
+		r2.appendChild(c23);
+		var c24 = document.createElement('th');
+		c24.innerHTML = detailOrders[i].tprice;
+		r2.appendChild(c24);
+		var c25 = document.createElement('th');
+		c25.innerHTML = detailOrders[i].status;
+		r2.appendChild(c25);
+	
+		table.appendChild(r2);
+		}
+	
+	}
+	
+	
+	
+	
+}
+
+
+

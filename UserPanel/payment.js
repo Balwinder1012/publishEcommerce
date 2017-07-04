@@ -98,7 +98,7 @@ var UID = getUserId();
 if(UID==-1){
 	
 	alert('Please Login First');
-	window.location = "../LoginPage.html";
+	window.location = "../index.html";
 	
 	
 }
@@ -111,7 +111,7 @@ if(currentUser==undefined){
 		UserList[index].flag="offline";
 	}
 	updateLocalStorage();
-	window.location = "../LoginPage.html"
+	window.location = "../index.html"
 	
 }
 function updateLocalStorage(){
@@ -166,7 +166,7 @@ function setUserAccountInactive(){
 		
 		updateLocalStorage();
 	
-		window.location = "../LoginPage.html";
+		window.location = "../index.html";
 	
 }
 
@@ -309,7 +309,7 @@ function addToDom2(){
 			r2.setAttribute("id",cart[i].id);
 	
 			var c1 = document.createElement('td');
-			c1.innerHTML = "Product Name : ".bold() + cart[i].name;
+			c1.innerHTML = cart[i].id+" Product Name : ".bold() + cart[i].name;
 			r2.appendChild(c1);
 	
 			var c2 = document.createElement('td');
@@ -394,7 +394,9 @@ function addToDom2(){
 			
 			removeProduct.addEventListener("click",function(event){
 				//Delete it from the cart array and return back the userQuant from deleted array to products array
-				 var index = getIndex(event.target.parentNode.parentNode.id);
+				//alert(event.target.parentNode.parentNode.id);
+				 var index = getIndex(cart,event.target.parentNode.parentNode.id);
+				// alert(cart[index].name);
 				 products[index].quant = parseInt(products[index].quant) + parseInt(cart[index].userQuant);
 				 
 				cart.splice(index,1);
@@ -512,7 +514,7 @@ function addToMasterOrders(userId){
 	
 	
 	//var noOfUserIds = findNumberOfUsersIds();
-	
+	alert(userIDisUnique(userId));
 	if(userIDisUnique(userId)){
 			var totalQuantity=0;
 			var totalPrice=0;
@@ -534,26 +536,28 @@ function addToMasterOrders(userId){
 			idForMaster++;
 			
 			masterOrders.push(masterObj);
+			
+		
+		
 			updateStorageForMasterOrders();
-		
-		
-		
 		
 		
 		
 	}
 	else{
 		
+			//alert(userId);
 			var index = getMasterIndex(userId);
 			
 			masterOrders[index].totalPrice = findTotalPrice(userId);
 			masterOrders[index].totalQuantity = findTotalQuantity(userId);
-			masterOrders[index] = new Date();
-			
+			masterOrders[index].date = new Date();
+			updateStorageForMasterOrders();
 		
 		
 		
 	}
+	
 	
 }
 function findTotalPrice(userId){
@@ -563,7 +567,7 @@ function findTotalPrice(userId){
 					sum = sum + detailOrders[i].tprice;
 				}
 			}
-			
+		
 	return sum;
 	
 	
@@ -572,9 +576,9 @@ function findTotalPrice(userId){
 
 function findTotalQuantity(userId){
 	var sum=0;
-	for(var i=0;i<masterOrders.length;i++){
-				if(masterOrders[i].userId==userId){
-					sum = sum + masterOrders[i].userQuant;
+	for(var i=0;i<detailOrders.length;i++){
+				if(detailOrders[i].userId==userId){
+					sum = sum + detailOrders[i].quant;
 				}
 			}
 			
@@ -585,8 +589,8 @@ function findTotalQuantity(userId){
 function getMasterIndex(userId){
 	
 		for(var i=0;i<masterOrders.length;i++)
-			if(masterOrders[i].userID==userId)
-				return 1;
+			if(masterOrders[i].userId==userId)
+				return i;
 			
 		return -1;	
 	

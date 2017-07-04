@@ -28,7 +28,7 @@ if(UserList.length){
 }
 cancel.addEventListener("click",function(event){
 	
-	window.location="LoginPage.html";
+	window.location="index.html";
 	
 });
 signUp.addEventListener("click",function(event){
@@ -53,7 +53,7 @@ signUp.addEventListener("click",function(event){
 		
 		else{
 			addTheNewUserToArray(name,email,pwd,address);
-			window.location= "LoginPage.html";
+			window.location= "index.html";
 		}
 		
 	

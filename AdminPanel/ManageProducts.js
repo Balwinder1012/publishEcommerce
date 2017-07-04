@@ -43,7 +43,7 @@
 	
 		alert("Please login first");
 		hideTheElement(b);
-		window.location = "../LoginPage.html"
+		window.location = "../index.html"
 	
 	}
 
@@ -76,7 +76,7 @@ function setAdminAccountInactive(){
 		
 		updateLocalManager();
 	
-		window.location = "../LoginPage.html";
+		window.location = "../index.html";
 	
 }
 

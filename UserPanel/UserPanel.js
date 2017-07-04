@@ -12,7 +12,7 @@ UserList = getUserList();
 if(getUserId()==-1){
 	
 	alert('Please Login First');
-	window.location = "../LoginPage.html";
+	window.location = "../index.html";
 	
 	
 }
@@ -69,7 +69,7 @@ if(currentUser==undefined){
 		UserList[index].flag="offline";
 	}
 	updateLocalStorage();
-	window.location = "../LoginPage.html"
+	window.location = "../index.html"
 	
 }
 function updateLocalStorage(){
@@ -124,7 +124,7 @@ function setUserAccountInactive(){
 		
 		updateLocalStorage();
 	
-		window.location = "../LoginPage.html";
+		window.location = "../index.html";
 	
 }
 
@@ -155,6 +155,8 @@ yourOrders.addEventListener("click",function(event){
 	
 	if(userHasAnyOrder())
 		showTheOrders();
+	else
+		showOrders.innerHTML = "<br/><br/>You have no orders".bold();
 });
 	
 	
